@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="schlagenhauf",
+    name="gitlab2mr",
     version="0.1.0",
     author="Jonas Schlagenhauf",
     description="A gitlab-to-myrepo config helper",
