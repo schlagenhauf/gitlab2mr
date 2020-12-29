@@ -66,8 +66,9 @@ def main(url, token, filename, match, negative_match, include_archived, enable_n
     with open(filename, 'w') as f:
         content = [
             f'{"#" if e["disabled"] else ""}[{e["project_path"]}]\n' +
-            f'{"#" if e["disabled"] else ""}checkout =' +
-            f'git clone \'{e["git_url"]}\' \'{e["project"]}\'' for e in new_entries]
+            f'{"#" if e["disabled"] else ""}checkout = ' +
+            f'git clone \'{e["git_url"]}\' \'{e["project"]}\'' for e in
+            sorted(new_entries, key=lambda x: x["disabled"])]
         f.write('\n\n'.join(content))
 
     # print stats
