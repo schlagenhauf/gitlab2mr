@@ -9,21 +9,26 @@ import re
 @click.option('--filename', '-f', help='Filename and path of the output file.', default='./.mrconfig.gitlab', show_default=True)
 @click.option('--match', '-m', help='Regular expression that needs to be matched.', default=None, show_default=True)
 @click.option('--negative-match', '-n', help='Regular expression that needs NOT to be matched.', default=None, show_default=True)
-@click.option('--include-archived', is_flag=True, help='If set, search will include archived projects.')
-@click.option('--enable-new', is_flag=True, help='If set, newly fetched entries will be enabled (uncommented) right away.')
-def main(url, token, filename, match, negative_match, include_archived, enable_new):
+@click.option('--only-owned/--no-only-owned', help='Consider only owned projects'
+              ' Disabling this may lead to very long processing times or failure for large instances (like gitlab.com).', default=True, show_default=True)
+@click.option('--archived/--no-archived', help='If set, search will include archived projects.', default=False, show_default=True)
+@click.option('--enable-new/--no-enable-new', help='If set, newly fetched entries will be enabled (uncommented) right away.', default=False, show_default=True)
+def main(url, token, filename, match, negative_match, only_owned, archived, enable_new):
     """gitlab myrepo tool."""
     # Register a connection to a gitlab instance, using its URL and a user private token
+    if not only_owned and url.contains('gitlab.com'):
+        print("CAUTION! Requesting non-owned projects from gitlab.com produces a lot of results and may fail.")
+
     gl = Gitlab(url, token)
     baseurl = url.replace('https://', '')
 
     gl.auth()  # Connect to get the current user
-    all_projects = gl.projects.list(all=True)
+    all_projects = gl.projects.list(owned=only_owned, archived=archived, all=True)
 
     # fetch entries from gitlab instance
     new_entries = []
     for project in sorted(all_projects, key=lambda k: str.lower(k.name_with_namespace)):
-        if not include_archived and project.archived:
+        if not archived and project.archived:
             continue
 
         full_path = project.path_with_namespace
@@ -35,8 +40,9 @@ def main(url, token, filename, match, negative_match, include_archived, enable_n
             continue
 
         config_entry = {'project_path': full_path, 'git_url': f'git@{baseurl}:{full_path}.git',
-                        'project': project.path, 'disabled':  not enable_new}
+                        'project': project.path, 'disabled': not enable_new}
         new_entries.append(config_entry)
+        print(f'Found {project.path}')
 
     # load entries from file if it exists
     existing_entries = []
