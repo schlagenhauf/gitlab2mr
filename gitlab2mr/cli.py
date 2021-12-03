@@ -4,20 +4,29 @@ import re
 
 
 @click.command()
-@click.option('--url', '-u', default="https://gitlab.com", help='URL of the Gitlab instance.', show_default=True)
+@click.option('--url', '-u', help='URL of the Gitlab instance.',
+              default="https://gitlab.com", show_default=True)
 @click.option('--token', '-t', help='Private access token to access the instance.')
-@click.option('--filename', '-f', help='Filename and path of the output file.', default='./.mrconfig.gitlab', show_default=True)
-@click.option('--match', '-m', help='Regular expression that needs to be matched.', default=None, show_default=True)
-@click.option('--negative-match', '-n', help='Regular expression that needs NOT to be matched.', default=None, show_default=True)
+@click.option('--filename', '-f', help='Filename and path of the output file.',
+              default='./.mrconfig.gitlab', show_default=True)
+@click.option('--match', '-m', help='Regular expression that needs to be matched.',
+              default=None, show_default=True)
+@click.option('--negative-match', '-n', help='Regular expression that needs NOT to be matched.',
+              default=None, show_default=True)
 @click.option('--only-owned/--no-only-owned', help='Consider only owned projects'
-              ' Disabling this may lead to very long processing times or failure for large instances (like gitlab.com).', default=True, show_default=True)
-@click.option('--archived/--no-archived', help='If set, search will include archived projects.', default=False, show_default=True)
-@click.option('--enable-new/--no-enable-new', help='If set, newly fetched entries will be enabled (uncommented) right away.', default=False, show_default=True)
+              ' Disabling this may lead to very long processing times or failure'
+              ' for large instances (like gitlab.com).', default=True, show_default=True)
+@click.option('--archived/--no-archived', help='If set, search will include archived projects.',
+              default=False, show_default=True)
+@click.option('--enable-new/--no-enable-new',
+              help='If set, newly fetched entries will be enabled (uncommented) right away.',
+              default=False, show_default=True)
 def main(url, token, filename, match, negative_match, only_owned, archived, enable_new):
     """gitlab myrepo tool."""
     # Register a connection to a gitlab instance, using its URL and a user private token
     if not only_owned and url.contains('gitlab.com'):
-        print("CAUTION! Requesting non-owned projects from gitlab.com produces a lot of results and may fail.")
+        print('CAUTION! Requesting non-owned projects from gitlab.com produces'
+              ' a lot of results and may fail.')
 
     gl = Gitlab(url, token)
     baseurl = url.replace('https://', '')
@@ -49,7 +58,7 @@ def main(url, token, filename, match, negative_match, only_owned, archived, enab
     try:
         with open(filename, 'r') as f:
             for line in f:
-                if re.search('^#?\[.*\]$', line):
+                if re.search(r'^#?\[.*\]$', line):
                     disabled = line[0] == '#'
                     command_parts = next(f).strip('#').split('\'')
                     git_url = command_parts[1]
