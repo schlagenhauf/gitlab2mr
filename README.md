@@ -8,10 +8,16 @@ to maintain a myrepos config manually. Then this tool is for you.
 
 ## Installation
 
-gitlab2mr is available via [pip](https://pypi.org/project/gitlab2mr/):
+gitlab2mr is available via [pypi](https://pypi.org/project/gitlab2mr/):
 
 ```
 pip install --user gitlab2mr
+```
+
+or better
+
+```
+pipx install gitlab2mr
 ```
 
 ## Usage

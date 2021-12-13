@@ -6,7 +6,7 @@ import re
 @click.command()
 @click.option('--url', '-u', help='URL of the Gitlab instance.',
               default="https://gitlab.com", show_default=True)
-@click.option('--token', '-t', help='Private access token to access the instance.')
+@click.option('--token', '-t', required=True, help='Private access token to access the instance.')
 @click.option('--filename', '-f', help='Filename and path of the output file.',
               default='./.mrconfig.gitlab', show_default=True)
 @click.option('--match', '-m', help='Regular expression that needs to be matched.',
