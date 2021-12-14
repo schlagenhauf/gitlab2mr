@@ -1,3 +1,7 @@
+[![PyPI-Server](https://img.shields.io/pypi/v/gitlab2mr.svg)](https://pypi.org/project/gitlab2mr/)
+[![Upload Action](https://github.com/schlagenhauf/gitlab2mr/actions/workflows/python-publish.yml/badge.svg)](https://github.com/schlagenhauf/gitlab2mr/actions/workflows/python-publish.yml)
+[![Project generated with PyScaffold](https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold)](https://pyscaffold.org/)
+
 # gitlab2mr
 
 A python script to generate a [myrepos](https://myrepos.branchable.com/) config file from a Gitlab
